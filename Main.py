@@ -3,13 +3,15 @@ import os,csv
 from PIL import Image
 from scripts import Face_detect
 from scripts import functions
+from scripts import trainModel
 class App(customtkinter.CTk):
     def __init__(self):
                 #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                         #Start GUI#
         super().__init__()
         self.facedetectClass=Face_detect.FaceDetect()
-        customtkinter.set_default_color_theme('theme.json')
+        self.modelTrain=trainModel.TrainModel()
+        customtkinter.set_default_color_theme('scripts/theme.json')
         self.title("Personel Takip Uygulaması")
         self.geometry("700x480")
         self.iconbitmap(default="images/logo1.ico")
@@ -87,52 +89,53 @@ class App(customtkinter.CTk):
         if self.kSay==-1:
             self.labeltext="Not Found Database"
         self.labeltext="Sisteme Kayıtlı Kullanıcı Sayısı: "+str(self.kSay)
-        self.home_frame_large_image_label = customtkinter.CTkLabel(self.home_frame, text="PERSONEL TAKİP SİSTEMİ ",font=("Boba Cups",24), image=self.large_test_image)
+        self.home_frame_large_image_label = customtkinter.CTkLabel(self.home_frame, text="PERSONEL TAKİP SİSTEMİ ",font=customtkinter.CTkFont(size=25, weight="bold"), image=self.large_test_image)
         self.home_frame_large_image_label.grid(row=0, column=0, padx=20, pady=0)
-        self.label1=customtkinter.CTkLabel(self.home_frame,text=self.labeltext,font=("Letters for Learners",25))
-        self.label1.grid_configure(row=2,column=0)
+        self.label1=customtkinter.CTkLabel(self.home_frame,text=self.labeltext,font=customtkinter.CTkFont(size=18))
+        self.label1.grid_configure(row=2,column=0,padx=20)
         self.hakkindatxt="Personel Takip Sistemi ile personellerin işe başlama ve bitiş   saatlerini hızlı ve eksiksiz kayıt altına alabilirsiniz. \n "
         self.hakkindatxt+="Hata Oranı Düşük bir şekilde Yüz tanıma sistemi ile kolay ve hızlı işlem sunar. \n"
         self.hakkindatxt+="\n ~Ahmet Akkeçi~\n "
         # create textbox
         self.widget=customtkinter.CTkFrame(self.home_frame)
         self.widget.grid(row=3,column=0,padx=10,pady=20)
-        self.textbox = customtkinter.CTkTextbox(self.home_frame, width=0.01,font=("Letters for Learners",25),)
+        self.textbox = customtkinter.CTkTextbox(self.home_frame, font=customtkinter.CTkFont(size=18))
         self.textbox.insert("0.0", self.hakkindatxt)
         self.textbox.configure(state="disabled") 
-        self.textbox.grid(row=1, column=0, padx=(70, 70), pady=(0, 0), sticky="nsew")
-        self.facelogo=customtkinter.CTkImage(light_image=Image.open("images/fbeyaz.png"),dark_image=Image.open("images/f.png"),size=(65,65))
-        self.facelogolabel = customtkinter.CTkLabel(self.widget, text=" Facebook", image=self.facelogo,
-                                                             compound="left", font=customtkinter.CTkFont(size=15, weight="bold"))
-        self.facelogolabel.grid(row=3, column=0, padx=10, pady=0)
-        self.instalogo=customtkinter.CTkImage(light_image=Image.open("images/ibeyaz.png"),dark_image=Image.open("images/i.png"),size=(65,65))
-        self.instalogolabel = customtkinter.CTkLabel(self.widget, text=" İnstagram", image=self.instalogo,
-                                                             compound="left", font=customtkinter.CTkFont(size=15, weight="bold"))
-        self.instalogolabel.grid(row=3, column=1, padx=10, pady=0)
+        self.textbox.grid(row=1, column=0, padx=(47, 47), pady=(0, 0), sticky="nsew")
+        self.facelogo=customtkinter.CTkImage(light_image=Image.open("images/fbeyaz.png"),dark_image=Image.open("images/f.png"),size=(50,50))
+        self.facelogobutton=customtkinter.CTkButton(self.widget,text="Facebook",image=self.facelogo,
+                                                    corner_radius=0, height=20, border_spacing=5,font=customtkinter.CTkFont(size=15, weight="bold"),
+                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w")
+        self.facelogobutton.grid(row=3,column=0,padx=(5,0),pady=0)
+       # self.facelogolabel = customtkinter.CTkLabel(self.widget, text=" Facebook", image=self.facelogo,
+        #                                                     compound="left", font=customtkinter.CTkFont(size=15, weight="bold"))
+        #self.facelogolabel.grid(row=3, column=0, padx=10, pady=0)
+        self.instalogo=customtkinter.CTkImage(light_image=Image.open("images/ibeyaz.png"),dark_image=Image.open("images/i.png"),size=(50,50))
+        self.facelogobutton=customtkinter.CTkButton(self.widget,text="İnstagram",image=self.instalogo,
+                                                    corner_radius=0, height=20, border_spacing=5,font=customtkinter.CTkFont(size=15, weight="bold"),
+                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w")
+        self.facelogobutton.grid(row=3,column=1,padx=(5,0),pady=0)
+       # self.instalogolabel = customtkinter.CTkLabel(self.widget, text=" İnstagram", image=self.instalogo,
+        #                                                     compound="left", font=customtkinter.CTkFont(size=15, weight="bold"))
+        #self.instalogolabel.grid(row=3, column=1, padx=10, pady=0)
 
-        self.twlogo=customtkinter.CTkImage(light_image=Image.open("images/tbeyaz.png"),dark_image=Image.open("images/t.png"),size=(65,65))
-        self.twlogolabel=customtkinter.CTkLabel(self.widget,text=" Twitter",image=self.twlogo,compound="left",font=customtkinter.CTkFont(size=15,weight="bold"))
-        self.twlogolabel.grid(row=3,column=2,padx=10,pady=0)
+        self.twlogo=customtkinter.CTkImage(light_image=Image.open("images/tbeyaz.png"),dark_image=Image.open("images/t.png"),size=(50,50))
+        self.facelogobutton=customtkinter.CTkButton(self.widget,text="Twitter",image=self.twlogo,
+                                                    corner_radius=0, height=20, border_spacing=5,font=customtkinter.CTkFont(size=15, weight="bold"),
+                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w")
+        self.facelogobutton.grid(row=3,column=2,padx=(5,0),pady=0)
+        #self.twlogolabel=customtkinter.CTkLabel(self.widget,text=" Twitter",image=self.twlogo,compound="left",font=customtkinter.CTkFont(size=15,weight="bold"))
+        #self.twlogolabel.grid(row=3,column=2,padx=10,pady=0)
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                         #Second Frame#
         # create second frame  
         self.second_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        self.second_frame_large_image_label = customtkinter.CTkLabel(self.second_frame, text="Yuz Algılama ve Kullanıcı Listesi",font=("Boba Cups",25), image=self.large_test_image)
+        self.second_frame_large_image_label = customtkinter.CTkLabel(self.second_frame, text="Yuz Algılama ve Kullanıcı Listesi",font=customtkinter.CTkFont(size=25, weight="bold"), image=self.large_test_image)
         self.second_frame_large_image_label.grid(row=0, column=0, padx=10, pady=0)
         # create scrollable frame
-        self.scrollable_frame = customtkinter.CTkScrollableFrame(self.second_frame, label_text="Kayıtlı Kullanıcı Listesi")
-        self.scrollable_frame.grid(row=1, column=0, padx=(30, 30), pady=(0, 0), sticky="nsew")
-        self.scrollable_frame.grid_columnconfigure(1, weight=1)
-        self.scrollable_frame_switches = []
-        self.headerlabel=customtkinter.CTkLabel(master=self.scrollable_frame,text="\tID NO \t KULLANICI ADI \t",fg_color="red",font=("Letters for Learners",25))
-        self.headerlabel.grid(row=0,column=0,padx=0, pady=(0,0))
-        self.scrollable_frame_switches.append(self.headerlabel)
-        #burada
         
-        self.userlist()
-        self.usertxt=""
-        self.sayac=1
-        self.count=0
+        self.scrollable()
         self.seconf_frame_buttonframe=customtkinter.CTkFrame(self.second_frame,corner_radius=0,fg_color="transparent")
         self.seconf_frame_buttonframe.grid(row=2,column=0,padx=(20,0),pady=0,sticky="nsew")
 
@@ -200,6 +203,7 @@ class App(customtkinter.CTk):
     def frame3(self):
         self.fourth_frame.grid(row=0, column=1, sticky="nsew")
         self.frame_2_button.configure(text='Kullanıcı Ekle')
+
     def select_frame_by_name(self, name):
         # set button color for selected button
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
@@ -238,39 +242,81 @@ class App(customtkinter.CTk):
     def change_scaling_event(self, new_scaling: str):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
+
     def userlist(self):
         self.sayac=1
         self.usertxt =""
         self.count=0
         self.userlistid,self.userlistname=functions.Kliste()
+        print("userlist ve name: ")
+        print("----------------")
+        print(self.userlistid)
+        print(self.userlistname)
+        print("-------------------")
+        self.scrollable_frame_switches.clear()
+        self.btnname={}
+        self.btnid=[]
         for user in self.userlistid:
-            self.usertxt=user+"\t"+self.userlistname[self.count]
+            def action(x=user):
+                return self.User_Delete(x)
+            self.usertxt=str(user)+"\t"+str(self.userlistname[self.count])
             self.count+=1
-            self.label=customtkinter.CTkLabel(master=self.scrollable_frame,text=self.usertxt,font=("Letters for Learners",25))
-            self.label.grid(row=self.sayac,column=0,padx=10, pady=(0,0))
+            self.label=customtkinter.CTkLabel(master=self.scrollable_frame,text=self.usertxt,font=customtkinter.CTkFont(size=18),anchor='center')
+            self.label.grid(row=self.sayac,column=0,padx=0, pady=(0,0))
+            self.btnname[user]=customtkinter.CTkButton(master=self.scrollable_frame,corner_radius=0,height=20, border_spacing=5, text="",
+                                              fg_color="transparent", text_color=("gray10","gray90"),hover_color=("gray70","gray30"),
+                                              image=self.adduser_CANCEL_image,anchor="c",command=action)
+            self.btnname[user].grid(row=self.sayac,column=1,padx=0,pady=0)
             self.scrollable_frame_switches.append(self.label)
+            self.scrollable_frame_switches.append(self.btnname)
             self.sayac+=1
             self.usertxt=""
+
+    def User_Delete(self,id):
+        functions.kSil(id)
+        self.scrollable_frame_switches.pop()
+        self.scrollable()
+        print(id,"'li Kullanıcı Silindi.")
+
     def DetectedFace(self):
         id,ad=self.facedetectClass.main()
         if id==-1:
             print("Kimse Tanınmadı ! ")
         else:
             print("id: ",ad," Ad: ",id)
+
     def adduser_OK(self):
         print("Kullanıcı ekleme kabul butonu")
         gettxt=[]
         for i in range(8):
             gettxt.append(self.entries[i].get("0.0","end-1c"))
-        print("---------------")
-        print(gettxt)
-        print("---------------")
+        result=functions.kEkle(gettxt[0],gettxt[1],gettxt[2],gettxt[3],gettxt[4],gettxt[5],gettxt[6],gettxt[7])
+        if result == 1:      
+            functions.filedialog_show(gettxt[0])
+        self.modelTrain.main()
+        self.adduser_CANCEL()
+
     def adduser_CANCEL(self):
         for i in range(8):
             self.entries[i].delete("0.0","end")
 
+    def scrollable(self):
+        self.scrollable_frame = customtkinter.CTkScrollableFrame(self.second_frame, label_text="Kayıtlı Kullanıcı Listesi")
+        self.scrollable_frame.grid(row=1, column=0, padx=(30, 30), pady=(0, 0), sticky="nsew")
+        self.scrollable_frame.grid_columnconfigure(1, weight=1)
+        self.scrollable_frame_switches = []
+        self.headerlabel=customtkinter.CTkLabel(master=self.scrollable_frame,text="\tID NO \t KULLANICI ADI \t",text_color="red",font=customtkinter.CTkFont(size=18))
+        self.headerlabel.grid(row=0,column=0,padx=0, pady=(0,0))
+        self.headerlabel=customtkinter.CTkLabel(master=self.scrollable_frame,text="Kullanıcı Sil",text_color="red",compound='right',font=customtkinter.CTkFont(size=18),anchor='center')
+        self.headerlabel.grid(row=0,column=1,padx=(0,0), pady=0)
+        self.scrollable_frame_switches.append(self.headerlabel)
+        self.userlist()
+        self.usertxt=""
+        self.sayac=1
+        self.count=0
 
 
+    
 
 if __name__ == "__main__":
     app = App()

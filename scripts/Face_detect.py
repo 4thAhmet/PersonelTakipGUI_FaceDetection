@@ -1,36 +1,28 @@
 import cv2,os,csv,time
 from PIL import Image,ImageDraw,ImageFont
 import numpy as np
+import sqlite3 as sql
+
 class FaceDetect:
     def __init__(self):
         super().__init__()
+        self.vt=sql.connect("C:/Users/AHMET/Desktop/PythonProje/scripts/Db/user_db.sqlite")
         self.csvpath="dataFace/dataBase.csv"
         self.recognizer = cv2.face.LBPHFaceRecognizer_create()
         self.cascadePath="Cascades/haarcascade_frontalface_default.xml"
         self.font=cv2.FONT_HERSHEY_SIMPLEX
         self.color = (255,0,0)
-        self.device=0
-        #self.device="face_test.mp4"
-    def readCSV(self):
+        #self.device=0
+        self.device="face_test.mp4"
+    def readDb(self):
         self.names={}
-        print("Reading CSV File...")
-        if os.path.exists(self.csvpath):
-            self.f=open(self.csvpath,mode='r')
-        else:
-            print("CSV NO FOUND!")
-            print("Please Create a CSV File! You can sse train.py file")
-            print("Terminating...")
-            exit()           
-        with self.f as csv_file:
-            self.csv_reader=csv.reader(csv_file,delimiter=',')
-            for row in self.csv_reader:
-                if len(row) == 0:
-                    continue
-                if row[1] == ' ':
-                    row[1]='Noname'
-                self.names[str(row[0])]=str(row[1])
-        self.f.close()
-        print("Read Csv File!")
+        print("Reading Database...")
+        im=self.vt.cursor()
+        im.execute("Select * from users")
+        dataList=im.fetchall()
+        for data in dataList:
+            adsoyad=str(data[1])+" "+str(data[2])
+            self.names[str(data[0])]=adsoyad
         return self.names
     def print_utf8_text(self,image,xy,text,color):
         fontName='FreeSerif.ttf'
@@ -46,7 +38,7 @@ class FaceDetect:
         self.recognizer.read('Train/train.yml')
         faceCascade = cv2.CascadeClassifier(self.cascadePath)
         id = 0
-        names = self.readCSV()
+        names = self.readDb()
         cam = cv2.VideoCapture(self.device)
         cam.set(3,1000)
         cam.set(4,800)
@@ -69,7 +61,12 @@ class FaceDetect:
                 id,uyum = self.recognizer.predict(gray[y:y+h, x:x+w])
                 if(uyum<70):      
                     ad=id
-                    id = names[str(id)]
+                    print("----: ",id)
+                    try:
+                        id = names[str(id)]
+                    except KeyError:
+                        print("Hatalı Model Kullanımı! Modeli Tekrar Oluşturunuz!")
+                        return -1,-1
                     uyum=f"Uyum Oranı: {round(uyum,0)}%"
                     print(f"\n Name: {id} {uyum}")
                     img=self.print_utf8_text(img,(x+5,y-25),str(id),self.color)

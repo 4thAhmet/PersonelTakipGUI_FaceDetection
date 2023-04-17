@@ -1,13 +1,19 @@
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
+                            # Kütüphaneler #
 import customtkinter
-import os,csv
+from tkinter import ttk
+import tkinter as tk
+import os
 from PIL import Image
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
+                            # fonksiyon import #
 from scripts import Face_detect
 from scripts import functions
 from scripts import trainModel
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
+                            # Window Başlangıç #
 class App(customtkinter.CTk):
     def __init__(self):
-                #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
-                                        #Start GUI#
         super().__init__()
         self.facedetectClass=Face_detect.FaceDetect()
         self.modelTrain=trainModel.TrainModel()
@@ -96,7 +102,6 @@ class App(customtkinter.CTk):
         self.hakkindatxt="Personel Takip Sistemi ile personellerin işe başlama ve bitiş   saatlerini hızlı ve eksiksiz kayıt altına alabilirsiniz. \n "
         self.hakkindatxt+="Hata Oranı Düşük bir şekilde Yüz tanıma sistemi ile kolay ve hızlı işlem sunar. \n"
         self.hakkindatxt+="\n ~Ahmet Akkeçi~\n "
-        # create textbox
         self.widget=customtkinter.CTkFrame(self.home_frame)
         self.widget.grid(row=3,column=0,padx=10,pady=20)
         self.textbox = customtkinter.CTkTextbox(self.home_frame, font=customtkinter.CTkFont(size=18))
@@ -106,36 +111,27 @@ class App(customtkinter.CTk):
         self.facelogo=customtkinter.CTkImage(light_image=Image.open("images/fbeyaz.png"),dark_image=Image.open("images/f.png"),size=(50,50))
         self.facelogobutton=customtkinter.CTkButton(self.widget,text="Facebook",image=self.facelogo,
                                                     corner_radius=0, height=20, border_spacing=5,font=customtkinter.CTkFont(size=15, weight="bold"),
-                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w")
+                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w",command=lambda: functions.socialmedia(1))
         self.facelogobutton.grid(row=3,column=0,padx=(5,0),pady=0)
-       # self.facelogolabel = customtkinter.CTkLabel(self.widget, text=" Facebook", image=self.facelogo,
-        #                                                     compound="left", font=customtkinter.CTkFont(size=15, weight="bold"))
-        #self.facelogolabel.grid(row=3, column=0, padx=10, pady=0)
         self.instalogo=customtkinter.CTkImage(light_image=Image.open("images/ibeyaz.png"),dark_image=Image.open("images/i.png"),size=(50,50))
-        self.facelogobutton=customtkinter.CTkButton(self.widget,text="İnstagram",image=self.instalogo,
+        self.instabutton=customtkinter.CTkButton(self.widget,text="İnstagram",image=self.instalogo,
                                                     corner_radius=0, height=20, border_spacing=5,font=customtkinter.CTkFont(size=15, weight="bold"),
-                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w")
-        self.facelogobutton.grid(row=3,column=1,padx=(5,0),pady=0)
-       # self.instalogolabel = customtkinter.CTkLabel(self.widget, text=" İnstagram", image=self.instalogo,
-        #                                                     compound="left", font=customtkinter.CTkFont(size=15, weight="bold"))
-        #self.instalogolabel.grid(row=3, column=1, padx=10, pady=0)
+                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w",command=lambda:functions.socialmedia(2))
+        self.instabutton.grid(row=3,column=1,padx=(5,0),pady=0)
 
         self.twlogo=customtkinter.CTkImage(light_image=Image.open("images/tbeyaz.png"),dark_image=Image.open("images/t.png"),size=(50,50))
-        self.facelogobutton=customtkinter.CTkButton(self.widget,text="Twitter",image=self.twlogo,
+        self.twlogobutton=customtkinter.CTkButton(self.widget,text="Twitter",image=self.twlogo,
                                                     corner_radius=0, height=20, border_spacing=5,font=customtkinter.CTkFont(size=15, weight="bold"),
-                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w")
-        self.facelogobutton.grid(row=3,column=2,padx=(5,0),pady=0)
-        #self.twlogolabel=customtkinter.CTkLabel(self.widget,text=" Twitter",image=self.twlogo,compound="left",font=customtkinter.CTkFont(size=15,weight="bold"))
-        #self.twlogolabel.grid(row=3,column=2,padx=10,pady=0)
+                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w",command=lambda:functions.socialmedia(3))
+        self.twlogobutton.grid(row=3,column=2,padx=(5,0),pady=0)
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                         #Second Frame#
         # create second frame  
         self.second_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.second_frame_large_image_label = customtkinter.CTkLabel(self.second_frame, text="Yuz Algılama ve Kullanıcı Listesi",font=customtkinter.CTkFont(size=25, weight="bold"), image=self.large_test_image)
         self.second_frame_large_image_label.grid(row=0, column=0, padx=10, pady=0)
-        # create scrollable frame
-        
-        self.scrollable()
+
+        self.viewer()
         self.seconf_frame_buttonframe=customtkinter.CTkFrame(self.second_frame,corner_radius=0,fg_color="transparent")
         self.seconf_frame_buttonframe.grid(row=2,column=0,padx=(20,0),pady=0,sticky="nsew")
 
@@ -149,13 +145,14 @@ class App(customtkinter.CTk):
         self.button_useredit.grid(row=2, column=2)
         self.button_refresh =customtkinter.CTkButton(self.seconf_frame_buttonframe,corner_radius=0,height=40, border_spacing=10, text="Listeyi Güncelle",
                                                         fg_color="transparent", text_color=("gray10","gray90"),hover_color=("gray70","gray30"),
-                                                        image=self.refresh_image, anchor="w",command=self.userlist)
+                                                        image=self.refresh_image, anchor="w",command=self.viewer)
         self.button_refresh.grid(row=2, column=3,sticky="")
         
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                 #Third Frame#
         # create third frame
         self.third_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
+
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                 #Fourth Frame#
         # create fourth frame
@@ -192,7 +189,39 @@ class App(customtkinter.CTk):
         self.buttonCancel.grid(row=9, column=0, padx=10, pady=10)  
         self.buttonOK.place(relx=0.5,rely=0.1,anchor="center")   
         self.buttonCancel.place(relx=0.9, rely=0.1,anchor="center") 
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------#
+                                #five Frame#
+        # create five frame
+        self.five_frame = customtkinter.CTkFrame(self,corner_radius=0, fg_color="transparent")
+        self.entries1=[]
+        self.labelheader1 = customtkinter.CTkLabel(self.five_frame, text="Personel Düzenle",
+                                                             font=customtkinter.CTkFont(size=25, weight="bold"))
+        self.labelheader1.grid(row=0,column=0,padx=(0,0),pady=0)
+        self.labeltext1=[" ","Personel ID","Personel Adı","Personel Soyad","Personel Telefon","Personel Eposta","Departman ID","Departman Name","Personel Sifre"]
+        for i in range(1,9):
+            self.f1=customtkinter.CTkFrame(self.five_frame,corner_radius=0,fg_color="transparent")  
+            self.f1.grid(row=i, column=0, padx=0,pady=0)         
+            self.navigation_frame_label1 = customtkinter.CTkLabel(self.f1, text=self.labeltext1[i],
+                                                             font=customtkinter.CTkFont(size=13, weight="bold"))
+            self.entries1.append(customtkinter.CTkTextbox(self.five_frame,height=0.01, font=customtkinter.CTkFont(size=13)))
+            self.navigation_frame_label1.grid(row=0, column=0, padx=5, pady=10)  
+            self.entries1[-1].grid(row=i, column=1, padx=0, pady=10, sticky="nsew")
 
+        self.buttons_frame1=customtkinter.CTkFrame(self.five_frame,corner_radius=0,fg_color="transparent")
+        self.buttons_frame1.grid(row=10,column=1, padx=(10,10), pady=0)
+        self.buttons_frame11=customtkinter.CTkFrame(self.five_frame,corner_radius=0,fg_color="transparent")
+        self.buttons_frame11.grid(row=10,column=0, padx=(10,10), pady=0)
+        self.buttonOK=customtkinter.CTkButton(self.buttons_frame1,corner_radius=0,height=40, border_spacing=5, text="Kullanıcı Düzenle",
+                                              fg_color="transparent", text_color=("gray10","gray90"),hover_color=("gray70","gray30"),
+                                              image=self.adduser_OK_image,anchor="w",command=self.userupdate)
+        self.buttonOK.grid(row=9, column=0, padx=10, pady=10)    
+
+        self.buttonCancel=customtkinter.CTkButton(self.buttons_frame11,corner_radius=0,height=40, border_spacing=5, text="İptal Et",
+                                              fg_color="transparent", text_color=("gray10","gray90"),hover_color=("gray70","gray30"),
+                                              image=self.adduser_CANCEL_image,anchor="w",command=self.adduser_CANCEL)
+        self.buttonCancel.grid(row=9, column=0, padx=10, pady=10)  
+        self.buttonOK.place(relx=0.5,rely=0.1,anchor="center")   
+        self.buttonCancel.place(relx=0.9, rely=0.1,anchor="center") 
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                 #Home Frame#
         # select default frame
@@ -203,7 +232,11 @@ class App(customtkinter.CTk):
     def frame3(self):
         self.fourth_frame.grid(row=0, column=1, sticky="nsew")
         self.frame_2_button.configure(text='Kullanıcı Ekle')
-
+    
+    def frame4(self):
+        self.five_frame.grid(row=0,column=1,sticky="nsew")
+        self.frame_2_button.configure(text='Kullanıcı Düzenle')
+    
     def select_frame_by_name(self, name):
         # set button color for selected button
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
@@ -212,6 +245,7 @@ class App(customtkinter.CTk):
 
         # show selected frame
         self.fourth_frame.grid_forget()
+        self.five_frame.grid_forget()
         self.frame_2_button.configure(text="Kullanıcı Listesi")
         self.adduser_CANCEL()
         if name == "home":
@@ -238,40 +272,17 @@ class App(customtkinter.CTk):
 
     def change_appearance_mode_event(self, new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
-
+    
     def change_scaling_event(self, new_scaling: str):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         customtkinter.set_widget_scaling(new_scaling_float)
-
-    def userlist(self):
-        self.sayac=1
-        self.usertxt =""
-        self.count=0
-        self.userlistid,self.userlistname=functions.Kliste()
-        print("userlist ve name: ")
-        print("----------------")
-        print(self.userlistid)
-        print(self.userlistname)
-        print("-------------------")
-        self.scrollable_frame_switches.clear()
-        self.btnname={}
-        self.btnid=[]
-        for user in self.userlistid:
-            def action(x=user):
-                return self.User_Delete(x)
-            self.usertxt=str(user)+"\t"+str(self.userlistname[self.count])
-            self.count+=1
-            self.label=customtkinter.CTkLabel(master=self.scrollable_frame,text=self.usertxt,font=customtkinter.CTkFont(size=18),anchor='center')
-            self.label.grid(row=self.sayac,column=0,padx=0, pady=(0,0))
-            self.btnname[user]=customtkinter.CTkButton(master=self.scrollable_frame,corner_radius=0,height=20, border_spacing=5, text="",
-                                              fg_color="transparent", text_color=("gray10","gray90"),hover_color=("gray70","gray30"),
-                                              image=self.adduser_CANCEL_image,anchor="c",command=action)
-            self.btnname[user].grid(row=self.sayac,column=1,padx=0,pady=0)
-            self.scrollable_frame_switches.append(self.label)
-            self.scrollable_frame_switches.append(self.btnname)
-            self.sayac+=1
-            self.usertxt=""
-
+        yeniH=480*new_scaling_float
+        yeniW=700*new_scaling_float
+        yeniGeometry=str(int(yeniW))+"x"+str(int(yeniH))
+        print("Resize new geometry: ",yeniGeometry)
+        self.percent=int(new_scaling.replace("%",""))
+        self.wm_geometry(yeniGeometry)
+        
     def User_Delete(self,id):
         functions.kSil(id)
         self.scrollable_frame_switches.pop()
@@ -284,6 +295,7 @@ class App(customtkinter.CTk):
             print("Kimse Tanınmadı ! ")
         else:
             print("id: ",ad," Ad: ",id)
+        self.facedetectClass.closeWindow()
 
     def adduser_OK(self):
         print("Kullanıcı ekleme kabul butonu")
@@ -300,24 +312,50 @@ class App(customtkinter.CTk):
         for i in range(8):
             self.entries[i].delete("0.0","end")
 
-    def scrollable(self):
-        self.scrollable_frame = customtkinter.CTkScrollableFrame(self.second_frame, label_text="Kayıtlı Kullanıcı Listesi")
-        self.scrollable_frame.grid(row=1, column=0, padx=(30, 30), pady=(0, 0), sticky="nsew")
-        self.scrollable_frame.grid_columnconfigure(1, weight=1)
-        self.scrollable_frame_switches = []
-        self.headerlabel=customtkinter.CTkLabel(master=self.scrollable_frame,text="\tID NO \t KULLANICI ADI \t",text_color="red",font=customtkinter.CTkFont(size=18))
-        self.headerlabel.grid(row=0,column=0,padx=0, pady=(0,0))
-        self.headerlabel=customtkinter.CTkLabel(master=self.scrollable_frame,text="Kullanıcı Sil",text_color="red",compound='right',font=customtkinter.CTkFont(size=18),anchor='center')
-        self.headerlabel.grid(row=0,column=1,padx=(0,0), pady=0)
-        self.scrollable_frame_switches.append(self.headerlabel)
-        self.userlist()
-        self.usertxt=""
-        self.sayac=1
-        self.count=0
+    def viewer(self):
+        self.tree = ttk.Treeview(self.second_frame,columns=('U_Id','U_ad','U_soyad','U_telefon','U_eposta','D_ID'), show='headings',height=10)
+        rows=functions.kliste()
+        for row in rows:
+            print(row) 
+            self.tree.insert("", tk.END, values=row) 
+        self.tree.bind("<Double-1>",self.doubleclick)
+        self.tree.column("#1",anchor=tk.CENTER,stretch=tk.NO,width=40)
+        self.tree.heading("#1", text="No")
+        self.tree.column("#2",anchor=tk.CENTER,stretch=tk.NO,width=75)
+        self.tree.heading("#2", text="Ad")
+        self.tree.column("#3",anchor=tk.CENTER,stretch=tk.NO,width=75)
+        self.tree.heading("#3", text="Soyad")
+        self.tree.column("#4",anchor=tk.CENTER,stretch=tk.NO,width=75)
+        self.tree.heading("#4", text="Telefon")
+        self.tree.column("#5",anchor=tk.CENTER,stretch=tk.NO,width=75)
+        self.tree.heading("#5", text="E-Posta")
+        self.tree.column("#6",anchor=tk.CENTER,stretch=tk.NO,width=70)
+        self.tree.heading("#6", text="Departman Adı")
+        self.tree.grid(row=1, column=0,padx=(30,30),pady=0)
 
+    def doubleclick(self,event):
+        item=self.tree.selection()
+        print(len(item))
+        if len(item) != 1:
+            print("Bir tane seçim yapınız!")
+        else :
+            print("you clicked on ",self.tree.item(item,"values")[0])
+            self.frame4()
+            for i in range(7):
+                if i==6:
+                    self.entries1[i+1].insert("0.0",self.tree.item(item,"values")[i]) 
+                else:
+                    self.entries1[i].insert("0.0",self.tree.item(item,"values")[i])
+            self.entries1[0].configure(state="disabled") 
 
-    
-
+    def userupdate(self):
+        gettxtupdate=[]
+        for i in range(8):
+            gettxtupdate.append(self.entries1[i].get("0.0","end-1c"))
+        result=functions.kUpdate(gettxtupdate[0],gettxtupdate[1],gettxtupdate[2],gettxtupdate[3],gettxtupdate[4],gettxtupdate[5],gettxtupdate[6],gettxtupdate[7])
+        if result==-1:
+            print("Hatalı Giris")
+             
 if __name__ == "__main__":
     app = App()
     print("Personel Takip Programı Başlatıldı.\nresizable Disabled.")

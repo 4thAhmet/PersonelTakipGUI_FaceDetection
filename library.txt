@@ -1,0 +1,9 @@
+- tkinter
+- Customtkinter 
+- Opencv
+- os 
+- pillow
+- numpy
+- sqlite3
+- shutil
+- time

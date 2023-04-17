@@ -1,4 +1,4 @@
-import cv2,os,csv,time
+import cv2,time
 from PIL import Image,ImageDraw,ImageFont
 import numpy as np
 import sqlite3 as sql
@@ -12,8 +12,8 @@ class FaceDetect:
         self.cascadePath="Cascades/haarcascade_frontalface_default.xml"
         self.font=cv2.FONT_HERSHEY_SIMPLEX
         self.color = (255,0,0)
-        #self.device=0
-        self.device="face_test.mp4"
+        self.device=0
+        #self.device="face_test.mp4"
     def readDb(self):
         self.names={}
         print("Reading Database...")
@@ -44,6 +44,7 @@ class FaceDetect:
         cam.set(4,800)
         minW = 0.1 * cam.get(3)
         minH = 0.1 * cam.get(4)
+        b=0
         while(True):
             ret,img=cam.read()
             if not ret:
@@ -56,26 +57,34 @@ class FaceDetect:
             minNeighbors = 5,
             minSize=(int(minW),int(minH)),
             )
-            for(x,y,w,h) in faces:
+            if self.kontrol ==0:
+                for(x,y,w,h) in faces:
+                    cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
+                    id,uyum = self.recognizer.predict(gray[y:y+h, x:x+w])
+                    if(uyum<70):      
+                        ad=id
+                        print("----: ",id)
+                        try:
+                            id = names[str(id)]
+                        except KeyError:
+                            print("Hatalı Model Kullanımı! Modeli Tekrar Oluşturunuz!")
+                            return -1,-1
+                        uyum=f"Uyum Oranı: {round(uyum,0)}%"
+                        print(f"\n Name: {id} {uyum}")
+                        img=self.print_utf8_text(img,(x+5,y-25),str(id),self.color)
+                        time.sleep(0.03)
+                        a=time.time()
+                        self.kontrol=1
+                        cv2.imwrite("controlFace/set"+str(ad)+".jpg",img)
+                        #cv2.putText(img,str(uyum),(x+5,y+h+25),font,1,(0,255,0),1)
+            if self.kontrol==1:   
+                b=time.time()
+                cv2.putText(img,str(int(b-a))+" Second",(x+5,y+h+25),cv2.FONT_HERSHEY_COMPLEX,1,(0,255,0),1)
                 cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
-                id,uyum = self.recognizer.predict(gray[y:y+h, x:x+w])
-                if(uyum<70):      
-                    ad=id
-                    print("----: ",id)
-                    try:
-                        id = names[str(id)]
-                    except KeyError:
-                        print("Hatalı Model Kullanımı! Modeli Tekrar Oluşturunuz!")
-                        return -1,-1
-                    uyum=f"Uyum Oranı: {round(uyum,0)}%"
-                    print(f"\n Name: {id} {uyum}")
-                    img=self.print_utf8_text(img,(x+5,y-25),str(id),self.color)
-                    time.sleep(0.03)
-                    self.kontrol=1
-                    cv2.imwrite("../controlFace/set"+str(ad)+".jpg",img)
-                    #cv2.putText(img,str(uyum),(x+5,y+h+25),font,1,(0,255,0),1)
-            if self.kontrol==1:
-                return id,ad
+                if(int(b-a) == 3):
+                    
+                    return id,ad
+                #return id,ad
             cv2.imshow("Frame",img)
             k=cv2.waitKey(10 & 0xff)
             if k==27 or k==ord('q'):
@@ -85,4 +94,6 @@ class FaceDetect:
                 print("[INFO]: Program Terminating...")
                 cam.release()
                 cv2.destroyAllWindows()    
-                return id,ad
+                return id,ad        
+    def closeWindow(self): 
+        cv2.destroyAllWindows() 

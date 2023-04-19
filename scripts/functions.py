@@ -17,19 +17,6 @@ def KullaniciSay():
         veri=im.fetchone()
         return veri[0]
 
-def Kliste():
-    klistid=[]
-    klistname=[]
-    klistid.clear()
-    klistname.clear()
-    im=vt.cursor()
-    im.execute("Select * from Users")
-    veri=im.fetchall()
-    for data in veri:
-        klistid.append(data[0])
-        klistname.append(data[1])
-    return klistid,klistname
-
 def kSil(deleteid):
      im=vt.cursor()
      im.execute(f"Delete from Users where U_Id={deleteid}")
@@ -95,5 +82,11 @@ def kliste():
         rows = cur1.fetchall() 
         return rows
 
+def kDel(deleteid):
+     cur=vt.cursor()
+     cur.execute(f"Delete from Users where U_Id={deleteid}")
+     vt.commit()
+     print(f"Kullanıcı silindi! ID:{deleteid}")
+     Resimsil(deleteid)
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
                             # END #

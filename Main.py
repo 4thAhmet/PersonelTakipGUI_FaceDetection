@@ -1,3 +1,10 @@
+"""
+*****************************************************
+*                   Ahmet Akkeçi                    *
+*              Personel Takip Uygulaması            *
+*                                                   *
+*****************************************************
+"""
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
                             # Kütüphaneler #
 import customtkinter
@@ -214,14 +221,14 @@ class App(customtkinter.CTk):
         self.buttonOK=customtkinter.CTkButton(self.buttons_frame1,corner_radius=0,height=40, border_spacing=5, text="Kullanıcı Düzenle",
                                               fg_color="transparent", text_color=("gray10","gray90"),hover_color=("gray70","gray30"),
                                               image=self.adduser_OK_image,anchor="w",command=self.userupdate)
-        self.buttonOK.grid(row=9, column=0, padx=10, pady=10)    
+        self.buttonOK.grid(row=9, column=0, padx=10, pady=10)  
 
-        self.buttonCancel=customtkinter.CTkButton(self.buttons_frame11,corner_radius=0,height=40, border_spacing=5, text="İptal Et",
+        self.buttonCancel=customtkinter.CTkButton(self.buttons_frame11,corner_radius=0,height=40, border_spacing=5, text="Kullanıcı Sil",
                                               fg_color="transparent", text_color=("gray10","gray90"),hover_color=("gray70","gray30"),
-                                              image=self.adduser_CANCEL_image,anchor="w",command=self.adduser_CANCEL)
+                                              image=self.adduser_CANCEL_image,anchor="w",command=self.userDelete)
         self.buttonCancel.grid(row=9, column=0, padx=10, pady=10)  
-        self.buttonOK.place(relx=0.5,rely=0.1,anchor="center")   
-        self.buttonCancel.place(relx=0.9, rely=0.1,anchor="center") 
+        self.buttonOK.place(relx=0.1,rely=0.1,anchor="w")   
+        self.buttonCancel.place(relx=0.5, rely=0.1,anchor="w") 
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                 #Home Frame#
         # select default frame
@@ -263,6 +270,9 @@ class App(customtkinter.CTk):
 
     def home_button_event(self):
         self.select_frame_by_name("home")
+        self.kSay=functions.KullaniciSay()
+        self.labeltext="Sisteme Kayıtlı Kullanıcı Sayısı: "+str(self.kSay)
+        self.label1.configure(text=self.labeltext)
 
     def frame_2_button_event(self):
         self.select_frame_by_name("frame_2")
@@ -307,6 +317,7 @@ class App(customtkinter.CTk):
             functions.filedialog_show(gettxt[0])
         self.modelTrain.main()
         self.adduser_CANCEL()
+        self.viewer()
 
     def adduser_CANCEL(self):
         for i in range(8):
@@ -316,7 +327,6 @@ class App(customtkinter.CTk):
         self.tree = ttk.Treeview(self.second_frame,columns=('U_Id','U_ad','U_soyad','U_telefon','U_eposta','D_ID'), show='headings',height=10)
         rows=functions.kliste()
         for row in rows:
-            print(row) 
             self.tree.insert("", tk.END, values=row) 
         self.tree.bind("<Double-1>",self.doubleclick)
         self.tree.column("#1",anchor=tk.CENTER,stretch=tk.NO,width=40)
@@ -334,8 +344,9 @@ class App(customtkinter.CTk):
         self.tree.grid(row=1, column=0,padx=(30,30),pady=0)
 
     def doubleclick(self,event):
+        self.entries1[0].configure(state="normal") 
+        self.updateuser_Cancel()
         item=self.tree.selection()
-        print(len(item))
         if len(item) != 1:
             print("Bir tane seçim yapınız!")
         else :
@@ -355,7 +366,19 @@ class App(customtkinter.CTk):
         result=functions.kUpdate(gettxtupdate[0],gettxtupdate[1],gettxtupdate[2],gettxtupdate[3],gettxtupdate[4],gettxtupdate[5],gettxtupdate[6],gettxtupdate[7])
         if result==-1:
             print("Hatalı Giris")
-             
+
+    def updateuser_Cancel(self):
+        for i in range(8):
+            self.entries1[i].delete("0.0","end")
+
+    def userDelete(self):
+        delid=int(self.entries1[0].get("0.0","end-1c"))
+        functions.kDel(delid)
+        self.updateuser_Cancel()
+        self.select_frame_by_name("frame_2")
+        self.viewer()
+
+
 if __name__ == "__main__":
     app = App()
     print("Personel Takip Programı Başlatıldı.\nresizable Disabled.")

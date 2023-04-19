@@ -32,8 +32,6 @@ Gerekli paketleri yükleyin
     pip install opencv-python
     pip install pillow
     pip install numpy 
-    Install the Aforge.Direct.Show package for camera use.
-    Install version 4.11.3497 of Emgu.CV package to manipulate the image
 ```
 
 Run the project.
@@ -53,8 +51,5 @@ I learned interface development with Custom tkinter, defining objects in the Int
 I made this project with Python
 
   
-## ScreenShot
-![in-app sample image](ss/0.png "SS")
-![in-app sample image](ss/1.png "SS")
 
   

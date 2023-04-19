@@ -53,8 +53,5 @@ I learned interface development with Custom tkinter, defining objects in the Int
 I made this project with Python
 
   
-## ScreenShot
-![in-app sample image](PersonelTakipGUI_FaceDetection/blob/main/ss/0.PNG "SS")
-![in-app sample image](./ss/1.png "SS")
 
   

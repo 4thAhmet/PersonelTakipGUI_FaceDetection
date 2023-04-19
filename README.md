@@ -54,7 +54,7 @@ I made this project with Python
 
   
 ## ScreenShot
-![in-app sample image](ss/0.png "SS")
-![in-app sample image](ss/1.png "SS")
+![in-app sample image](/ss/0.png "SS")
+![in-app sample image](/ss/1.png "SS")
 
   

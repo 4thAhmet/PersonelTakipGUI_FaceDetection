@@ -4,6 +4,7 @@ import os,shutil as sh
 import sqlite3 as sql
 from tkinter import filedialog as fd
 import webbrowser as web
+import cv2
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
                             # Global değişkenler #
@@ -88,5 +89,12 @@ def kDel(deleteid):
      vt.commit()
      print(f"Kullanıcı silindi! ID:{deleteid}")
      Resimsil(deleteid)
+
+def openPicture(path,winname):
+    cv2.namedWindow(winname)        # Create a named window
+    cv2.moveWindow(winname, 1000, 500)   # Move it to (x,y)
+    res=cv2.imread(path,1)
+    ress=cv2.resize(res, (400, 400))
+    cv2.imshow(winname,ress)
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
                             # END #

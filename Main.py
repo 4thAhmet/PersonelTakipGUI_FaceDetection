@@ -405,11 +405,9 @@ class App(customtkinter.CTk):
         self.updateuser_Cancel()
         itema=self.tree.selection()
         al=self.tree.item(itema,'values')
-        print(al)
         if len(itema) != 1:
             print("Bir tane seçim yapınız!")
         else :
-            print("you clicked on ",self.tree.item(itema,"values")[0])
             self.frame4()
             for i in range(5):
                 self.entries1[i+1].insert("0.0",self.tree.item(itema,"values")[i])

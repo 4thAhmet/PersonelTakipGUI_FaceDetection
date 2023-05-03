@@ -1,4 +1,4 @@
-"""
+""" !!!!!!!!!!!!! USER ID OTAMATİK ARTAN YAPILACAK ARA BOŞLUKLAR OPTİMİZE EDİLECEK !!!!!!!!!!!!!!!!
 *****************************************************
 *                   Ahmet Akkeçi                    *
 *              Personel Takip Uygulaması            *
@@ -28,14 +28,14 @@ class App(customtkinter.CTk):
         customtkinter.set_default_color_theme('scripts/theme.json')
         self.title("Personel Takip Uygulaması")
         self.geometry("1050x720")
-        self.iconbitmap(default="images/logo1.ico")
+        self.iconbitmap(default="images/logo.ico")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                         #Load Images#
         # load images with light and dark mode image
         image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "images")
-        self.logo_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "logo.png")), size=(26, 26))
+        self.logo_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "logo.png")), size=(65, 65))
         self.large_test_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "large_test_image.png")), size=(500, 150))
         self.image_icon_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "image_icon_light.png")), size=(50, 50))
         self.home_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "home.png")),
@@ -60,7 +60,7 @@ class App(customtkinter.CTk):
         self.navigation_frame.grid_rowconfigure(4, weight=2)
 
         self.navigation_frame_label = customtkinter.CTkLabel(self.navigation_frame, text=" Personel Takip", image=self.logo_image,
-                                                             compound="left", font=customtkinter.CTkFont(size=18, weight="bold"))
+                                                             compound="left", font=customtkinter.CTkFont(size=22, weight="bold"))
         self.navigation_frame_label.grid(row=0, column=0, padx=30, pady=20)
 
         self.home_button = customtkinter.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text=" Anasayfa",
@@ -77,18 +77,19 @@ class App(customtkinter.CTk):
                                                       fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
                                                       image=self.add_user_image, anchor="w",font=customtkinter.CTkFont(size=20), command=self.frame_3_button_event)
         self.frame_3_button.grid(row=3, column=0, sticky="ew")
-
-        self.appearance_mode_menu = customtkinter.CTkOptionMenu(self.navigation_frame, values=["Light", "Dark", "System"],
+        self.theme_label = customtkinter.CTkLabel(self.navigation_frame, text="UI Theme:", anchor="w",font=customtkinter.CTkFont(size=14))
+        self.theme_label.grid(row=5, column=0, padx=30, pady=(0, 0),sticky="sw")
+        self.appearance_mode_menu = customtkinter.CTkOptionMenu(self.navigation_frame, values=["Light", "Dark", "System"], width=200, font=customtkinter.CTkFont(size=14),
                                                                 command=self.change_appearance_mode_event)
-        self.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=0, sticky="s")
+        self.appearance_mode_menu.grid(row=6, column=0, padx=30, pady=0, sticky="sw")
 
 
-        self.scaling_label = customtkinter.CTkLabel(self.navigation_frame, text="UI Scaling:", anchor="w")
-        self.scaling_label.grid(row=7, column=0, padx=20, pady=(0, 0))
-        self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.navigation_frame, values=["70%","80%", "90%", "100%", "110%", "120%","130%"],
+        self.scaling_label = customtkinter.CTkLabel(self.navigation_frame, text="UI Scaling:", anchor="w", font=customtkinter.CTkFont(size=14))
+        self.scaling_label.grid(row=7, column=0, padx=30, pady=(0, 0),sticky="sw")
+        self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.navigation_frame, values=["70%","80%", "90%", "100%", "110%", "120%","130%"], width=200,font=customtkinter.CTkFont(size=14),
                                                                command=self.change_scaling_event)
         self.scaling_optionemenu.set('100%')
-        self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(0, 10))
+        self.scaling_optionemenu.grid(row=8, column=0, padx=30, pady=(0, 10),sticky="sw")
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                         #First Frame#
         # create home frame

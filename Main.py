@@ -13,7 +13,6 @@ import tkinter as tk
 import os
 from PIL import Image
 from datetime import datetime, timezone
-from CTkMessagebox import CTkMessagebox
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
                             # fonksiyon import #
@@ -21,6 +20,7 @@ from scripts import Face_detect
 from scripts import functions
 from scripts import trainModel
 from scripts import loadimages
+from scripts import deepface
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
                             # Window Başlangıç #
 class App(customtkinter.CTk):
@@ -28,17 +28,20 @@ class App(customtkinter.CTk):
         super().__init__()
         self.facedetectClass=Face_detect.FaceDetect()
         self.modelTrain=trainModel.TrainModel()
+        self.deepface=deepface.deepFace()
         customtkinter.set_default_color_theme('scripts/theme.json')
         self.title("Personel Takip Uygulaması")
         self.geometry("1155x792")
         self.iconbitmap(default="images/logo.ico")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1) 
+        self.sliderStart=1
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                         #Load Images#
         self.logo_image,self.large_test_image,self.image_icon_image,self.home_image, self.user_list_image, self.add_user_image, self.user_detect_image,self.refresh_image,self.adduser_CANCEL_image,self.info_image,self.userDelete_image=loadimages.loadimages()
         self.recentOnes=loadimages.loadimages2()   
-        self.facelogo,self.instalogo,self.twlogo=loadimages.SocailMediaLogo()                         
+        self.facelogo,self.instalogo,self.twlogo=loadimages.SocailMediaLogo()      
+        self.rightarrow,self.leftarrow,self.slider1,self.slider2,self.slider3=loadimages.sliderImage()                   
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                         #Navigation Bar Frame#
         # create navigation frame
@@ -75,6 +78,9 @@ class App(customtkinter.CTk):
                                                                command=self.change_scaling_event)
         self.scaling_optionemenu.set('100%')
         self.scaling_optionemenu.grid(row=8, column=0, padx=30, pady=(0, 10),sticky="sw")
+        self.signature=customtkinter.CTkLabel(self.navigation_frame,text="Ahmet Akkeçi",anchor="center",font=customtkinter.CTkFont(size=10))
+        self.signature.configure(font=("Signaturex Demo",10))
+        self.signature.grid(row=9,column=0,padx=0,pady=(0,2),sticky="s")
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                         #First Frame#
         # create home frame
@@ -89,18 +95,25 @@ class App(customtkinter.CTk):
         self.home_frame_large_image_label = customtkinter.CTkLabel(self.home_frame,text_color="white", text="PERSONEL TAKİP SİSTEMİ ",font=customtkinter.CTkFont(size=30, weight="bold"), image=self.large_test_image)
         self.home_frame_large_image_label.grid(row=0, column=0, padx=20, pady=0)
         self.label1=customtkinter.CTkLabel(self.home_frame,text=self.labeltext,font=customtkinter.CTkFont(size=25),text_color="#006BBB",image=self.info_image,compound="left")
-        self.label1.grid_configure(row=2,column=0,padx=20,pady=(30,20))
-        self.hakkindatxt="Personel Takip Sistemi ile personellerin işe başlama ve bitiş   saatlerini hızlı ve eksiksiz kayıt altına alabilirsiniz. \n "
-        self.hakkindatxt+="Hata Oranı Düşük bir şekilde Yüz tanıma sistemi ile kolay ve hızlı işlem sunar. \n"
-        self.hakkindatxt+="\n ~Ahmet Akkeçi~\n "
+        self.label1.grid_configure(row=2,column=0,padx=20,pady=(10,5))
         self.widget=customtkinter.CTkFrame(self.home_frame,corner_radius=0)
         self.widget.grid_columnconfigure(3,weight=1)
         self.widget.grid_rowconfigure(0,weight=1)
-        self.widget.grid(row=8,column=0,padx=10,pady=(20,20),sticky="s")
-        self.textbox = customtkinter.CTkTextbox(self.home_frame, font=customtkinter.CTkFont(size=25))
-        self.textbox.insert("0.0", self.hakkindatxt)
-        self.textbox.configure(state="disabled") 
-        self.textbox.grid(row=1, column=0, padx=(47, 47), pady=(0, 0), sticky="nsew")
+        self.widget.grid(row=8,column=0,padx=10,pady=(5,5),sticky="s")
+        self.slider_frame=customtkinter.CTkFrame(self.home_frame,corner_radius=0)
+        self.slider_frame.grid_columnconfigure(3,weight=1)
+        self.slider_frame.grid_rowconfigure(0,weight=1)
+        self.slider_frame.grid(row=1, column=0,padx=10,pady=5)
+        self.leftbutton=customtkinter.CTkButton(self.slider_frame,text="",image=self.leftarrow,
+                                                corner_radius=0, height=20,width=50, border_spacing=5,font=customtkinter.CTkFont(size=1, weight="bold"),
+                                                fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="center",command=lambda: self.slide('left'))
+        self.rightbutton=customtkinter.CTkButton(self.slider_frame,text="",image=self.rightarrow,
+                                                corner_radius=0, height=20,width=50, border_spacing=5,font=customtkinter.CTkFont(size=1, weight="bold"),
+                                                fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="center",command=lambda: self.slide('right'))
+        self.slider=customtkinter.CTkLabel(self.slider_frame,text="",image=self.slider1)
+        self.slider.grid(row=0,column=1,padx=5,pady=0,sticky='nsew')
+        self.leftbutton.grid(row=0,column=0,padx=5, pady=5,sticky="w")
+        self.rightbutton.grid(row=0,column=2,padx=5,pady=5,sticky="e")
         self.facelogobutton=customtkinter.CTkButton(self.widget,text="Facebook",image=self.facelogo,
                                                 corner_radius=0, height=20, border_spacing=5,font=customtkinter.CTkFont(size=20, weight="bold"),
                                                 fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w",command=lambda: functions.socialmedia(1))
@@ -314,13 +327,14 @@ class App(customtkinter.CTk):
             print("Kimse Tanınmadı ! ")
             functions.messageBox("Kullanıcı tanıma","Kullanıcı Tanınamadı","warning",option=["Tamam"])
         else:
-            print("id: ",ad," Ad: ",id)
+            print("id: ",ad," Ad: ",id) 
             message=str(id)+" Numaralı Kullanıcı Tanındı. Ad: "+str(ad)
             functions.messageBox("Kullanıcı tanıma",message,"check",option=["Tamam"])
             msg=str(id)+" Numaralı "+str(ad)+" Kullanıcısı Giriş Yaptı"
             functions.bilgiEkle(msg,id)
             self.LastProcessView()
         self.facedetectClass.closeWindow()
+        #self.deepface.RundeepFace(id)
 
     def adduser_OK(self):
         print("Kullanıcı ekleme kabul butonu")
@@ -517,6 +531,22 @@ class App(customtkinter.CTk):
         except ValueError:
             if v!="\x08" and v!="":
                 return "break"
+
+    def slide(self,yon):
+        if(yon=="left"):
+            self.sliderStart=self.sliderStart-1
+            if self.sliderStart<0:
+                self.sliderStart=2
+            elif self.sliderStart>2:
+                self.sliderStart=0
+        elif(yon=="right"):
+            self.sliderStart=self.sliderStart+1
+            if self.sliderStart<0:
+                self.sliderStart=2
+            elif self.sliderStart>2:
+                self.sliderStart=0
+        sliderList=[self.slider1,self.slider2,self.slider3]
+        self.slider.configure(image=sliderList[self.sliderStart])
 
 if __name__ == "__main__":
     app = App()

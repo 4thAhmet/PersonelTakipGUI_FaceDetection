@@ -1,4 +1,4 @@
-import cv2,time
+import cv2,time,os
 from PIL import Image,ImageDraw,ImageFont
 import numpy as np
 import sqlite3 as sql
@@ -57,34 +57,28 @@ class FaceDetect:
             minNeighbors = 5,
             minSize=(int(minW),int(minH)),
             )
-            if self.kontrol ==0:
-                for(x,y,w,h) in faces:
-                    cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
-                    id,uyum = self.recognizer.predict(gray[y:y+h, x:x+w])
-                    if(uyum<70):      
-                        ad=id
-                        print("----: ",id)
-                        try:
-                            id = names[str(id)]
-                        except KeyError:
-                            print("Hatalı Model Kullanımı! Modeli Tekrar Oluşturunuz!")
-                            return -1,-1
-                        uyum=f"Uyum Oranı: {round(uyum,0)}%"
-                        print(f"\n Name: {id} {uyum}")
-                        img=self.print_utf8_text(img,(x+5,y-25),str(id),self.color)
-                        time.sleep(0.03)
-                        a=time.time()
-                        self.kontrol=1
-                        cv2.imwrite("controlFace/set"+str(ad)+".jpg",img)
-                        #cv2.putText(img,str(uyum),(x+5,y+h+25),font,1,(0,255,0),1)
-            if self.kontrol==1:   
-                b=time.time()
-                cv2.putText(img,str(int(b-a))+" Second",(x+5,y+h+25),cv2.FONT_HERSHEY_COMPLEX,1,(0,255,0),1)
+            for(x,y,w,h) in faces:
                 cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
-                if(int(b-a) == 3):
+                id,uyum = self.recognizer.predict(gray[y:y+h, x:x+w])
+                if(uyum<70):      
+                    ad=id
+                    print("----: ",id)
+                    try:
+                        id = names[str(id)]
+                    except KeyError:
+                        print("Hatalı Model Kullanımı! Modeli Tekrar Oluşturunuz!")
+                        return -1,-1
+                    uyum=f"Uyum Oranı: {round(uyum,0)}%"
+                    print(f"\n Name: {id} {uyum}")
+                    img=self.print_utf8_text(img,(x+5,y-25),str(id),self.color)
+                    cv2.imshow("Frame",img)
+                    time.sleep(0.1)
+                    os.makedirs("controlFace/set"+str(ad))
+                    for i in range(3):
+                        cv2.imwrite("controlFace/set"+str(ad)+"/"+str(i)+".jpg",img)
+                    #cv2.putText(img,str(uyum),(x+5,y+h+25),font,1,(0,255,0),1)
                     return id,ad
-                #return id,ad
-            cv2.imshow("Frame",img)
+            #cv2.imshow("Frame",img)
             k=cv2.waitKey(10 & 0xff)
             if k==27 or k==ord('q'):
                 id = -1

@@ -4,12 +4,11 @@ import tkinter as tk
 import os
 from PIL import Image
 
+image_path=os.path.join("./images")
 def loadimages():
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
                                         #Load Images#
         # load images with light and dark mode image
-    #image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "images")
-    image_path=os.path.join("./images")
     logo_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "logo.png")), size=(65, 65))
     large_test_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "large_test_image.png")), size=(500, 150))
     image_icon_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "image_icon_light.png")), size=(50, 50))
@@ -21,8 +20,6 @@ def loadimages():
                                                 dark_image=Image.open(os.path.join(image_path, "add-user.png")), size=(50, 50))
     user_detect_image=customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path,"face-detection.png")),
                                                       dark_image=Image.open(os.path.join(image_path,"face-detection.png")), size=(50,50))
-   # user_edit_image=customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path,"edituser-dark.png")),
-      #                                              dark_image=Image.open(os.path.join(image_path,"edituser-light.png")),size=(50,50))
     refresh_image=customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path,"refresh.png")),
                                             dark_image=Image.open(os.path.join(image_path,"refresh.png")),size=(50,50))
     adduser_CANCEL_image=customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path,"cancel.png")),
@@ -34,7 +31,6 @@ def loadimages():
     return logo_image,large_test_image,image_icon_image,home_image,user_list_image,add_user_image,user_detect_image,refresh_image,adduser_CANCEL_image,info_image,deleteuser_image
         #--------------------------------------------------------------------------------------------------------------------------------------------------------------#
 def loadimages2():
-    image_path=os.path.join("./images")
     recentOnes = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "recent.png")),
                                         dark_image=Image.open(os.path.join(image_path, "recent.png")), size=(50, 50))
     return recentOnes
@@ -43,3 +39,12 @@ def SocailMediaLogo():
     instalogo=customtkinter.CTkImage(light_image=Image.open("images/i.png"),dark_image=Image.open("images/i.png"),size=(70,70))
     twlogo=customtkinter.CTkImage(light_image=Image.open("images/t.png"),dark_image=Image.open("images/t.png"),size=(70,70))
     return facelogo,instalogo,twlogo
+def sliderImage():
+    rightarrow=customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "right-arrow.png")),
+                                            dark_image=Image.open(os.path.join(image_path, "right-arrow.png")), size=(50, 50))
+    leftarrow=customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "left-arrow.png")),
+                                            dark_image=Image.open(os.path.join(image_path, "left-arrow.png")), size=(50, 50))
+    img1= customtkinter.CTkImage(Image.open(os.path.join(image_path, "slide.png")), size=(650, 450))
+    img2= customtkinter.CTkImage(Image.open(os.path.join(image_path, "slide1.png")), size=(650, 450))
+    img3= customtkinter.CTkImage(Image.open(os.path.join(image_path, "slide2.png")), size=(650, 450))
+    return rightarrow,leftarrow,img1,img2,img3

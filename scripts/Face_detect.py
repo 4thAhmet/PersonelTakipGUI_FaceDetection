@@ -12,8 +12,8 @@ class FaceDetect:
         self.cascadePath="Cascades/haarcascade_frontalface_default.xml"
         self.font=cv2.FONT_HERSHEY_SIMPLEX
         self.color = (255,0,0)
-        self.device=0
-        #self.device="face_test.mp4"
+        #self.device=0
+        self.device="yedek/face_test.mp4"
     def readDb(self):
         self.names={}
         print("Reading Database...")

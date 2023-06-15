@@ -79,9 +79,9 @@ class FaceDetect:
                         #cv2.putText(img,str(uyum),(x+5,y+h+25),font,1,(0,255,0),1)
             if self.kontrol==1:   
                 b=time.time()
-                cv2.putText(img,str(int(b-a))+" Second",(x+5,y+h+25),cv2.FONT_HERSHEY_COMPLEX,1,(0,255,0),1)
-                cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
-                if(int(b-a) == 3):
+                #cv2.putText(img,str(int(b-a))+" Second",(x+5,y+h+25),cv2.FONT_HERSHEY_COMPLEX,1,(0,255,0),1)
+                #cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
+                if(int(b-a) == 1):
                     return id,ad
                 #return id,ad
             cv2.imshow("Frame",img)

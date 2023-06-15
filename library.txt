@@ -7,3 +7,4 @@
 - sqlite3
 - shutil
 - time
+- aspose.pdf

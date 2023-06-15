@@ -41,10 +41,12 @@ def SocailMediaLogo():
     return facelogo,instalogo,twlogo
 def sliderImage():
     rightarrow=customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "right-arrow.png")),
-                                            dark_image=Image.open(os.path.join(image_path, "right-arrow.png")), size=(50, 50))
+                                            dark_image=Image.open(os.path.join(image_path, "right-arrow.png")), size=(25, 25))
     leftarrow=customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "left-arrow.png")),
-                                            dark_image=Image.open(os.path.join(image_path, "left-arrow.png")), size=(50, 50))
-    img1= customtkinter.CTkImage(Image.open(os.path.join(image_path, "slide.png")), size=(650, 450))
-    img2= customtkinter.CTkImage(Image.open(os.path.join(image_path, "slide1.png")), size=(650, 450))
-    img3= customtkinter.CTkImage(Image.open(os.path.join(image_path, "slide2.png")), size=(650, 450))
-    return rightarrow,leftarrow,img1,img2,img3
+                                            dark_image=Image.open(os.path.join(image_path, "left-arrow.png")), size=(25, 25))
+    img1= customtkinter.CTkImage(Image.open(os.path.join(image_path, "slide.png")),size=(700,450))
+    img2= customtkinter.CTkImage(Image.open(os.path.join(image_path, "slide1.png")),size=(700,450))
+    img3= customtkinter.CTkImage(Image.open(os.path.join(image_path, "slide2.png")),size=(700,450))
+    img4= customtkinter.CTkImage(Image.open(os.path.join(image_path, "slide3.png")),size=(700,450))
+    return rightarrow,leftarrow,img1,img2,img3,img4
+

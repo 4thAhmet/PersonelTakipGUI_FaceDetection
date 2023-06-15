@@ -5,9 +5,10 @@ import sqlite3 as sql
 from tkinter import filedialog as fd
 from CTkMessagebox import CTkMessagebox
 
+
 import webbrowser as web
 import cv2
-import locale,datetime
+import datetime
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
                             # Global değişkenler #
@@ -38,8 +39,9 @@ def messageBox(title,message,icon,option):
     res=msg.get()
     return res
 
-def kEkle(ad,soyad,tel,posta,did,dad,pw): 
+def kEkle(ad,soyad,tel,posta,did,pw): 
     im=vt.cursor()
+    im1=vt.cursor()
     try:
         im.execute(f"Insert Into Users (U_ad,U_soyad,U_telefon,U_eposta,D_ID,P_pw) values ('{ad}','{soyad}','{tel}','{posta}',{did},'{pw}')")
         vt.commit()
@@ -47,6 +49,8 @@ def kEkle(ad,soyad,tel,posta,did,dad,pw):
         print(kId,"'li Kullanıcı eklendi!")
         msg=str(ad)+" "+str(soyad)+" Kullanıcısı sisteme eklendi"
         bilgiEkle(msg,kId)
+        im1.execute(f"INSERT INTO PersonelDurum (K_no,Durum) values ({kId},{0})")
+        vt.commit()
         return 1
     except sql.IntegrityError:
         print("Kullanıcı ID daaha önce kullanılmış!")
@@ -87,7 +91,7 @@ def socialmedia(secim):
     else:
         print("hata ",secim)
 
-def kUpdate(no,ad,soyad,tel,posta,did,dad,pw):
+def kUpdate(no,ad,soyad,tel,posta,did,pw):
     im=vt.cursor()
     im.execute("Update Users SET U_ad='"+ad+"', U_soyad='"+soyad+"', U_telefon='"+tel+"', U_eposta='"+posta+"', D_ID="+did+", P_pw='"+pw+"' WHERE U_Id="+no)
     vt.commit()
@@ -176,5 +180,22 @@ def departmanGetir():
     cur.execute("SELECT * FROM DEPARTMAN")
     rows=cur.fetchall()
     return rows
+
+def PersonelDurum(id):
+    cur=vt.cursor()
+    cur.execute(f"SELECT max(id),K_no,Durum FROM PersonelDurum where K_no={id}")
+    rows=cur.fetchone()
+    print(rows)
+    return rows
+
+def PersonelDurumEkle(id,Durum):
+    curDate=datetime.datetime.now()
+    date=datetime.datetime.strftime(curDate,'%d,%B,%Y')
+    time=datetime.date.strftime(curDate,'%X')
+    cur=vt.cursor()
+    cur.execute(f"INSERT INTO PersonelDurum (K_no,Durum,Tarih,Saat) values ({id},{Durum},'{date}','{time}')")
+    vt.commit()
+    print("Eklendi")
+
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------#
                             # END #

@@ -191,8 +191,10 @@ class App(customtkinter.CTk):
         self.txtframe_fourthframe.grid(row=1,column=0,padx=0,pady=0,sticky=' ')
         self.labeltext=[" ","Personel Adı","Personel Soyad","Personel Telefon","Personel Eposta","Departman","Departman","Personel Sifre"]
         self.values=self.DepartmanList()
-        
-        kid=functions.kIdFinder()+1
+        try:
+            kid=functions.kIdFinder()+1
+        except:
+            kid=1
         for i in range(1,8):      
             self.navigation_label = customtkinter.CTkLabel(self.txtframe_fourthframe, text=self.labeltext[i],
                                                              font=customtkinter.CTkFont(size=18, weight="bold"))

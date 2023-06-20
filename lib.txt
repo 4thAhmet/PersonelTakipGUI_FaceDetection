@@ -1,0 +1,8 @@
+tk
+customtkinter
+opencv-python
+opencv-contrib-python
+Pillow
+CTkMessagebox
+aspose-pdf
+numpy
